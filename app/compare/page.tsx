@@ -6,78 +6,17 @@ import { useMemo, Suspense } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
-import { STATUS_LABELS, type PropertyStatus } from "@/convex/lib/enums";
-import { formatAcres, formatCurrency, labelize } from "@/lib/format";
-
-const COMPARE_FIELDS: {
-  label: string;
-  get: (p: Record<string, unknown>) => React.ReactNode;
-}[] = [
-  {
-    label: "Status",
-    get: (p) => STATUS_LABELS[p.status as PropertyStatus],
-  },
-  { label: "Price", get: (p) => formatCurrency(p.price as number) },
-  {
-    label: "Price / acre",
-    get: (p) => formatCurrency(p.pricePerAcre as number | undefined),
-  },
-  { label: "Acres", get: (p) => formatAcres(p.lotSizeAcres as number) },
-  {
-    label: "Buildable acres",
-    get: (p) => formatAcres(p.buildableAcres as number | undefined),
-  },
-  {
-    label: "Location",
-    get: (p) => `${p.city}, ${p.county}, ${p.state}`,
-  },
-  { label: "Water", get: (p) => labelize(String(p.waterSource)) },
-  { label: "Wastewater", get: (p) => labelize(String(p.wastewater)) },
-  { label: "Electric", get: (p) => labelize(String(p.electric)) },
-  { label: "Gas", get: (p) => labelize(String(p.gas)) },
-  { label: "Internet", get: (p) => labelize(String(p.internet)) },
-  { label: "Flood zone", get: (p) => String(p.femaFloodZone || "—") },
-  { label: "Fire risk", get: (p) => labelize(String(p.fireRiskZone)) },
-  { label: "Road type", get: (p) => labelize(String(p.roadType)) },
-  {
-    label: "Road maintenance",
-    get: (p) => labelize(String(p.roadMaintenance)),
-  },
-  {
-    label: "Fire dept access",
-    get: (p) =>
-      labelize(String(p.fireDeptAccessAdequate ?? "unknown")),
-  },
-  {
-    label: "Nearest fire station",
-    get: (p) =>
-      p.nearestFireStationMiles != null
-        ? `${p.nearestFireStationMiles} mi`
-        : "—",
-  },
-  {
-    label: "FD access width",
-    get: (p) =>
-      p.fireDeptAccessRoadWidthFt != null
-        ? `${p.fireDeptAccessRoadWidthFt} ft`
-        : "—",
-  },
-  {
-    label: "FD improvements",
-    get: (p) => String(p.fireDeptImprovementsNeeded || "—"),
-  },
-  { label: "Zoning", get: (p) => String(p.zoning || "—") },
-  { label: "Topography", get: (p) => labelize(String(p.topography)) },
-  {
-    label: "Wetlands",
-    get: (p) => (p.wetlandsPresent ? "Yes" : "No"),
-  },
-  {
-    label: "Annual tax",
-    get: (p) => formatCurrency(p.annualPropertyTax as number | undefined),
-  },
-  { label: "Notes", get: (p) => String(p.notes || "—") },
-];
+import { LoadingState } from "@/components/LoadingState";
+import { PageHeader } from "@/components/PageHeader";
+import {
+  DataTable,
+  DataTableBody,
+  DataTableCell,
+  DataTableHead,
+  DataTableHeader,
+  DataTableRow,
+} from "@/components/ui/data-table";
+import { COMPARE_FIELDS } from "@/lib/propertyDisplay";
 
 function CompareInner() {
   const search = useSearchParams();
@@ -98,10 +37,10 @@ function CompareInner() {
   if (ids.length < 2) {
     return (
       <div className="space-y-3">
-        <h1 className="text-2xl font-semibold">Compare</h1>
-        <p className="text-sm text-muted-foreground">
-          Select 2–4 properties on the list page, then open Compare.
-        </p>
+        <PageHeader
+          title="Compare"
+          description="Select 2–4 properties on the list page, then open Compare."
+        />
         <Link href="/" className="text-sm underline">
           Back to list
         </Link>
@@ -110,57 +49,51 @@ function CompareInner() {
   }
 
   if (properties === undefined) {
-    return <p className="text-sm text-muted-foreground">Loading…</p>;
+    return <LoadingState />;
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Compare</h1>
-        <p className="text-sm text-muted-foreground">
-          Side-by-side tradeoffs across utilities, hazards, and cost.
-        </p>
-      </div>
-      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-border bg-muted">
-            <tr>
-              <th className="px-3 py-2">Field</th>
-              {properties.map((p) => (
-                <th key={p._id} className="px-3 py-2">
-                  <Link
-                    href={`/properties/${p._id}`}
-                    className="font-semibold underline-offset-2 hover:underline"
-                  >
-                    {p.city}, {p.state}
-                  </Link>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {COMPARE_FIELDS.map((field) => (
-              <tr key={field.label} className="border-b border-border/60 align-top">
-                <td className="px-3 py-2 font-medium text-muted-foreground">
-                  {field.label}
-                </td>
-                {properties.map((p) => (
-                  <td key={p._id} className="px-3 py-2">
-                    {field.get(p as unknown as Record<string, unknown>)}
-                  </td>
-                ))}
-              </tr>
+      <PageHeader
+        title="Compare"
+        description="Side-by-side tradeoffs across utilities, hazards, and cost."
+      />
+      <DataTable>
+        <DataTableHeader>
+          <tr>
+            <DataTableHead>Field</DataTableHead>
+            {properties.map((p) => (
+              <DataTableHead key={p._id}>
+                <Link
+                  href={`/properties/${p._id}`}
+                  className="font-semibold underline-offset-2 hover:underline"
+                >
+                  {p.city}, {p.state}
+                </Link>
+              </DataTableHead>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </DataTableHeader>
+        <DataTableBody>
+          {COMPARE_FIELDS.map((field) => (
+            <DataTableRow key={field.key} className="align-top">
+              <DataTableCell className="font-medium text-muted-foreground">
+                {field.label}
+              </DataTableCell>
+              {properties.map((p) => (
+                <DataTableCell key={p._id}>{field.format(p)}</DataTableCell>
+              ))}
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
     </div>
   );
 }
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
+    <Suspense fallback={<LoadingState />}>
       <CompareInner />
     </Suspense>
   );

@@ -5,6 +5,10 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { PropertyForm } from "@/components/PropertyForm";
+import { LoadingState } from "@/components/LoadingState";
+import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { PropertyNotFound } from "@/components/PropertyNotFound";
 import { propertyToForm } from "@/lib/propertyForm";
 
 export default function EditPropertyPage() {
@@ -15,15 +19,15 @@ export default function EditPropertyPage() {
   const update = useMutation(api.properties.update);
 
   if (data === undefined) {
-    return <p className="text-sm text-muted-foreground">Loading…</p>;
+    return <LoadingState />;
   }
   if (data === null) {
-    return <p className="text-sm text-muted-foreground">Property not found.</p>;
+    return <PropertyNotFound />;
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
-      <h1 className="text-2xl font-semibold">Edit property</h1>
+    <PageShell spacing="tight">
+      <PageHeader title="Edit property" />
       <PropertyForm
         initialValues={propertyToForm(data.property)}
         submitLabel="Save changes"
@@ -38,6 +42,6 @@ export default function EditPropertyPage() {
           router.push(`/properties/${id}`);
         }}
       />
-    </div>
+    </PageShell>
   );
 }
