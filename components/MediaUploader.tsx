@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { DOCUMENT_LABELS, type DocumentLabel } from "@/convex/lib/enums";
 import { labelize } from "@/lib/format";
+import { FormAlert } from "@/components/FormAlert";
 
 type Props = {
   propertyId: Id<"properties">;
@@ -93,9 +94,7 @@ export function MediaUploader({ propertyId, photoIds, documents }: Props) {
 
   return (
     <div className="space-y-4">
-      {error ? (
-        <p className="text-sm text-red-700">{error}</p>
-      ) : null}
+      {error ? <FormAlert>{error}</FormAlert> : null}
 
       <div>
         <h3 className="mb-2 text-sm font-semibold text-foreground">Photos</h3>

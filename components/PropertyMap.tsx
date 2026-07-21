@@ -5,6 +5,8 @@ import L from "leaflet";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { LoadingState } from "@/components/LoadingState";
+import { PageHeader } from "@/components/PageHeader";
 import { STATUS_COLORS, STATUS_LABELS, type PropertyStatus } from "@/convex/lib/enums";
 import { formatAcres, formatCurrency } from "@/lib/format";
 import "leaflet/dist/leaflet.css";
@@ -22,7 +24,7 @@ export function PropertyMap() {
   const pins = useQuery(api.properties.listForMap);
 
   if (pins === undefined) {
-    return <p className="text-sm text-muted-foreground">Loading map…</p>;
+    return <LoadingState message="Loading map…" />;
   }
 
   const center: [number, number] =
@@ -32,12 +34,10 @@ export function PropertyMap() {
 
   return (
     <div className="space-y-3">
-      <div>
-        <h1 className="text-2xl font-semibold text-foreground">Map</h1>
-        <p className="text-sm text-muted-foreground">
-          Pins colored by status. Click a pin for details.
-        </p>
-      </div>
+      <PageHeader
+        title="Map"
+        description="Pins colored by status. Click a pin for details."
+      />
       <div className="h-[70vh] overflow-hidden rounded-xl border border-border shadow-sm">
         <MapContainer
           center={center}

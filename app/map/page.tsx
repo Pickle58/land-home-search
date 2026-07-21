@@ -1,13 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { LoadingState } from "@/components/LoadingState";
 
 const PropertyMap = dynamic(
   () =>
     import("@/components/PropertyMap").then((mod) => mod.PropertyMap),
   {
     ssr: false,
-    loading: () => <p className="text-sm text-muted-foreground">Loading map…</p>,
+    loading: () => <LoadingState message="Loading map…" />,
   },
 );
 

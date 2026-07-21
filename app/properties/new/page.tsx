@@ -6,12 +6,11 @@ import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { PropertyForm } from "@/components/PropertyForm";
 import { Button } from "@/components/ui/button";
-import {
-  pageSubtitleClass,
-  pageTitleClass,
-  inputClass,
-  sectionClass,
-} from "@/lib/ui-styles";
+import { Textarea } from "@/components/ui/textarea";
+import { CardPanel } from "@/components/CardPanel";
+import { FormAlert } from "@/components/FormAlert";
+import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
 import {
   emptyPropertyForm,
   mergeExtractedIntoForm,
@@ -52,18 +51,15 @@ export default function NewPropertyPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h1 className={pageTitleClass}>Add property</h1>
-        <p className={pageSubtitleClass}>
-          Paste a listing to pre-fill, then review before saving.
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader
+        title="Add property"
+        description="Paste a listing to pre-fill, then review before saving."
+      />
 
-      <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-foreground">Paste to fill</h2>
-        <textarea
-          className={`${inputClass} min-h-28`}
+      <CardPanel title="Paste to fill">
+        <Textarea
+          className="min-h-28"
           rows={5}
           placeholder="Paste listing description or notes…"
           value={paste}
@@ -79,11 +75,9 @@ export default function NewPropertyPage() {
           >
             {extracting ? "Extracting…" : "Extract fields"}
           </Button>
-          {extractError ? (
-            <p className="text-sm text-destructive">{extractError}</p>
-          ) : null}
+          {extractError ? <FormAlert>{extractError}</FormAlert> : null}
         </div>
-      </section>
+      </CardPanel>
 
       <PropertyForm
         key={formKey}
@@ -94,6 +88,6 @@ export default function NewPropertyPage() {
           router.push(`/properties/${id}`);
         }}
       />
-    </div>
+    </PageShell>
   );
 }
