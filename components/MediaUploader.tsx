@@ -98,7 +98,7 @@ export function MediaUploader({ propertyId, photoIds, documents }: Props) {
       ) : null}
 
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-stone-800">Photos</h3>
+        <h3 className="mb-2 text-sm font-semibold text-foreground">Photos</h3>
         <input
           type="file"
           accept="image/*"
@@ -119,7 +119,7 @@ export function MediaUploader({ propertyId, photoIds, documents }: Props) {
                     className="aspect-video w-full object-cover"
                   />
                 ) : (
-                  <div className="aspect-video bg-stone-100" />
+                  <div className="aspect-video bg-muted" />
                 )}
                 <button
                   type="button"
@@ -135,10 +135,10 @@ export function MediaUploader({ propertyId, photoIds, documents }: Props) {
       </div>
 
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-stone-800">Documents</h3>
+        <h3 className="mb-2 text-sm font-semibold text-foreground">Documents</h3>
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <select
-            className="rounded-md border border-stone-300 px-2 py-1 text-sm"
+            className="rounded-md border border-input bg-background px-2 py-1 text-sm"
             value={docLabel}
             onChange={(e) => setDocLabel(e.target.value as DocumentLabel)}
           >
@@ -162,12 +162,12 @@ export function MediaUploader({ propertyId, photoIds, documents }: Props) {
             return (
               <li
                 key={doc._id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-stone-200 px-3 py-2"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2"
               >
                 <div>
                   <span className="font-medium">{labelize(doc.label)}</span>
                   {doc.fileName ? (
-                    <span className="text-stone-500"> — {doc.fileName}</span>
+                    <span className="text-muted-foreground"> — {doc.fileName}</span>
                   ) : null}
                 </div>
                 <div className="flex gap-2">

@@ -21,6 +21,13 @@ import {
   PropertyFormValues,
   formToMutationArgs,
 } from "@/lib/propertyForm";
+import { Button } from "@/components/ui/button";
+import {
+  fieldHintClass,
+  fieldLabelClass,
+  inputClass,
+  sectionClass,
+} from "@/lib/ui-styles";
 
 type Props = {
   initialValues: PropertyFormValues;
@@ -40,18 +47,12 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="font-medium text-stone-800">{label}</span>
+      <span className={fieldLabelClass}>{label}</span>
       {children}
-      {hint ? <span className="text-xs text-stone-500">{hint}</span> : null}
+      {hint ? <span className={fieldHintClass}>{hint}</span> : null}
     </label>
   );
 }
-
-const inputClass =
-  "rounded-md border border-stone-300 bg-white px-3 py-2 text-stone-900 outline-none focus:border-stone-500";
-const sectionClass =
-  "space-y-4 rounded-lg border border-stone-200 bg-white p-4 shadow-sm";
-
 export function PropertyForm({
   initialValues,
   submitLabel,
@@ -94,7 +95,7 @@ export function PropertyForm({
       ) : null}
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">Location</h2>
+        <h2 className="text-base font-semibold text-foreground">Location</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Address">
             <input
@@ -170,7 +171,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">Listing</h2>
+        <h2 className="text-base font-semibold text-foreground">Listing</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Listing URL">
             <input
@@ -244,7 +245,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">
+        <h2 className="text-base font-semibold text-foreground">
           Land / lot
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -342,7 +343,7 @@ export function PropertyForm({
               />
             </Field>
           </div>
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.hoaOrDeedRestrictions}
@@ -371,7 +372,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">Utilities</h2>
+        <h2 className="text-base font-semibold text-foreground">Utilities</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Water source">
             <select
@@ -514,7 +515,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">Access</h2>
+        <h2 className="text-base font-semibold text-foreground">Access</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Road type" hint="Paved, gravel, dirt, private easement…">
             <select
@@ -555,7 +556,7 @@ export function PropertyForm({
               ))}
             </select>
           </Field>
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.drivewayInstalled}
@@ -638,7 +639,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">
+        <h2 className="text-base font-semibold text-foreground">
           Hazards & environment
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -668,7 +669,7 @@ export function PropertyForm({
               ))}
             </select>
           </Field>
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.wildfireHistoryNearby}
@@ -715,7 +716,7 @@ export function PropertyForm({
               onChange={(e) => set("radonZoneNotes", e.target.value)}
             />
           </Field>
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.wetlandsPresent}
@@ -739,7 +740,7 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">
+        <h2 className="text-base font-semibold text-foreground">
           Improvements & financial
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -768,7 +769,7 @@ export function PropertyForm({
               onChange={(e) => set("structureConditionNotes", e.target.value)}
             />
           </Field>
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.fencing}
@@ -821,9 +822,9 @@ export function PropertyForm({
       </section>
 
       <section className={sectionClass}>
-        <h2 className="text-base font-semibold text-stone-900">Notes</h2>
+        <h2 className="text-base font-semibold text-foreground">Notes</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="flex items-center gap-2 text-sm text-stone-800">
+          <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
               checked={values.isFavorite}
@@ -852,13 +853,9 @@ export function PropertyForm({
       </section>
 
       <div className="flex justify-end gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800 disabled:opacity-60"
-        >
+        <Button type="submit" disabled={saving}>
           {saving ? "Saving…" : submitLabel}
-        </button>
+        </Button>
       </div>
     </form>
   );

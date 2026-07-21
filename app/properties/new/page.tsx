@@ -5,6 +5,13 @@ import { useAction, useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { PropertyForm } from "@/components/PropertyForm";
+import { Button } from "@/components/ui/button";
+import {
+  pageSubtitleClass,
+  pageTitleClass,
+  inputClass,
+  sectionClass,
+} from "@/lib/ui-styles";
 import {
   emptyPropertyForm,
   mergeExtractedIntoForm,
@@ -47,32 +54,33 @@ export default function NewPropertyPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Add property</h1>
-        <p className="text-sm text-stone-600">
+        <h1 className={pageTitleClass}>Add property</h1>
+        <p className={pageSubtitleClass}>
           Paste a listing to pre-fill, then review before saving.
         </p>
       </div>
 
-      <section className="space-y-3 rounded-lg border border-stone-200 bg-white p-4 shadow-sm">
-        <h2 className="text-base font-semibold">Paste to fill</h2>
+      <section className={sectionClass}>
+        <h2 className="text-base font-semibold text-foreground">Paste to fill</h2>
         <textarea
-          className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm"
+          className={`${inputClass} min-h-28`}
           rows={5}
           placeholder="Paste listing description or notes…"
           value={paste}
           onChange={(e) => setPaste(e.target.value)}
         />
         <div className="flex flex-wrap items-center gap-3">
-          <button
+          <Button
             type="button"
+            variant="accent"
+            size="sm"
             disabled={extracting || !paste.trim()}
             onClick={handleExtract}
-            className="rounded-md bg-emerald-800 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
           >
             {extracting ? "Extracting…" : "Extract fields"}
-          </button>
+          </Button>
           {extractError ? (
-            <p className="text-sm text-red-700">{extractError}</p>
+            <p className="text-sm text-destructive">{extractError}</p>
           ) : null}
         </div>
       </section>

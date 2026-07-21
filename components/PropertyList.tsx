@@ -14,6 +14,14 @@ import {
   type PropertyStatus,
 } from "@/convex/lib/enums";
 import { formatAcres, formatCurrency, labelize } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  pageSubtitleClass,
+  pageTitleClass,
+  selectClass,
+} from "@/lib/ui-styles";
+import { cn } from "@/lib/utils";
 
 type Filters = {
   status: string;
@@ -98,41 +106,38 @@ export function PropertyList() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-stone-900">Properties</h1>
-          <p className="text-sm text-stone-600">
+          <h1 className={pageTitleClass}>Properties</h1>
+          <p className={pageSubtitleClass}>
             Catalog and compare land and homes you&apos;re researching.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => setView(view === "table" ? "cards" : "table")}
-            className="rounded-md border border-stone-300 px-3 py-1.5 text-sm"
           >
             {view === "table" ? "Card view" : "Table view"}
-          </button>
-          <Link
-            href={compareHref}
-            className={`rounded-md px-3 py-1.5 text-sm ${
-              selected.length >= 2
-                ? "bg-stone-900 text-white"
-                : "border border-stone-300 text-stone-400"
-            }`}
+          </Button>
+          <Button
+            variant={selected.length >= 2 ? "secondary" : "outline"}
+            size="sm"
+            asChild
+            disabled={selected.length < 2}
+            className={cn(selected.length < 2 && "pointer-events-none opacity-50")}
           >
-            Compare ({selected.length}/4)
-          </Link>
-          <Link
-            href="/properties/new"
-            className="rounded-md bg-emerald-800 px-3 py-1.5 text-sm font-medium text-white"
-          >
-            Add property
-          </Link>
+            <Link href={compareHref}>Compare ({selected.length}/4)</Link>
+          </Button>
+          <Button variant="accent" size="sm" asChild>
+            <Link href="/properties/new">Add property</Link>
+          </Button>
         </div>
       </div>
 
-      <div className="grid gap-2 rounded-lg border border-stone-200 bg-white p-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-2 rounded-xl border border-border bg-card p-3 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.status}
           onChange={(e) => setFilters({ ...filters, status: e.target.value })}
         >
@@ -144,7 +149,7 @@ export function PropertyList() {
           ))}
         </select>
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.waterSource}
           onChange={(e) =>
             setFilters({ ...filters, waterSource: e.target.value })
@@ -158,7 +163,7 @@ export function PropertyList() {
           ))}
         </select>
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.wastewater}
           onChange={(e) =>
             setFilters({ ...filters, wastewater: e.target.value })
@@ -172,7 +177,7 @@ export function PropertyList() {
           ))}
         </select>
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.electric}
           onChange={(e) => setFilters({ ...filters, electric: e.target.value })}
         >
@@ -184,24 +189,24 @@ export function PropertyList() {
           ))}
         </select>
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="City"
           value={filters.city}
           onChange={(e) => setFilters({ ...filters, city: e.target.value })}
         />
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="County"
           value={filters.county}
           onChange={(e) => setFilters({ ...filters, county: e.target.value })}
         />
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="State"
           value={filters.state}
           onChange={(e) => setFilters({ ...filters, state: e.target.value })}
         />
-        <label className="flex items-center gap-2 text-sm text-stone-700">
+        <label className="flex items-center gap-2 text-sm text-muted-foreground">
           <input
             type="checkbox"
             checked={filters.favoritesOnly}
@@ -212,35 +217,35 @@ export function PropertyList() {
           Favorites only
         </label>
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="Min price"
           type="number"
           value={filters.minPrice}
           onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
         />
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="Max price"
           type="number"
           value={filters.maxPrice}
           onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
         />
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="Min acres"
           type="number"
           value={filters.minAcres}
           onChange={(e) => setFilters({ ...filters, minAcres: e.target.value })}
         />
         <input
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           placeholder="Max acres"
           type="number"
           value={filters.maxAcres}
           onChange={(e) => setFilters({ ...filters, maxAcres: e.target.value })}
         />
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.sortBy}
           onChange={(e) =>
             setFilters({
@@ -257,7 +262,7 @@ export function PropertyList() {
           <option value="dateFound">Sort: date found</option>
         </select>
         <select
-          className="rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+          className={selectClass}
           value={filters.sortDir}
           onChange={(e) =>
             setFilters({
@@ -272,9 +277,9 @@ export function PropertyList() {
       </div>
 
       {properties === undefined ? (
-        <p className="text-sm text-stone-500">Loading…</p>
+        <p className="text-sm text-muted-foreground">Loading…</p>
       ) : properties.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-stone-300 bg-white p-8 text-center text-stone-600">
+        <p className="rounded-xl border border-dashed border-border bg-card p-8 text-center text-muted-foreground">
           No properties yet.{" "}
           <Link href="/properties/new" className="underline">
             Add your first listing
@@ -282,9 +287,9 @@ export function PropertyList() {
           .
         </p>
       ) : view === "table" ? (
-        <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
           <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50 text-stone-600">
+            <thead className="border-b border-border bg-muted text-muted-foreground">
               <tr>
                 <th className="px-3 py-2">Cmp</th>
                 <th className="px-3 py-2">★</th>
@@ -299,7 +304,7 @@ export function PropertyList() {
             </thead>
             <tbody>
               {properties.map((p) => (
-                <tr key={p._id} className="border-b border-stone-100">
+                <tr key={p._id} className="border-b border-border/60">
                   <td className="px-3 py-2">
                     <input
                       type="checkbox"
@@ -313,7 +318,7 @@ export function PropertyList() {
                       aria-label="Toggle favorite"
                       onClick={() => toggleFavorite({ id: p._id })}
                       className={
-                        p.isFavorite ? "text-amber-500" : "text-stone-300"
+                        p.isFavorite ? "text-accent" : "text-muted-foreground/40"
                       }
                     >
                       ★
@@ -322,7 +327,7 @@ export function PropertyList() {
                   <td className="px-3 py-2">
                     <Link
                       href={`/properties/${p._id}`}
-                      className="font-medium text-stone-900 underline-offset-2 hover:underline"
+                      className="font-medium text-primary underline-offset-2 hover:underline"
                     >
                       {p.city}, {p.state}
                     </Link>
@@ -345,34 +350,34 @@ export function PropertyList() {
           {properties.map((p) => (
             <article
               key={p._id}
-              className="rounded-lg border border-stone-200 bg-white p-4 shadow-sm"
+              className="rounded-xl border border-border bg-card p-4 shadow-sm"
             >
               <div className="mb-2 flex items-start justify-between gap-2">
                 <Link
                   href={`/properties/${p._id}`}
-                  className="text-lg font-semibold text-stone-900 hover:underline"
+                  className="text-lg font-semibold text-foreground hover:underline"
                 >
                   {p.city}, {p.state}
                 </Link>
                 <button
                   type="button"
                   onClick={() => toggleFavorite({ id: p._id })}
-                  className={p.isFavorite ? "text-amber-500" : "text-stone-300"}
+                  className={p.isFavorite ? "text-accent" : "text-muted-foreground/40"}
                 >
                   ★
                 </button>
               </div>
-              <p className="text-sm text-stone-700">
+              <p className="text-sm text-foreground/90">
                 {formatCurrency(p.price)} · {formatAcres(p.lotSizeAcres)}
               </p>
-              <p className="mt-1 text-xs text-stone-500">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {labelize(p.waterSource)} · {labelize(p.wastewater)} · Flood{" "}
                 {p.femaFloodZone || "—"}
               </p>
-              <p className="mt-2 text-xs font-medium text-stone-600">
+              <Badge variant="secondary" className="mt-2">
                 {STATUS_LABELS[p.status as PropertyStatus]}
-              </p>
-              <label className="mt-3 flex items-center gap-2 text-xs text-stone-600">
+              </Badge>
+              <label className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                 <input
                   type="checkbox"
                   checked={selected.includes(p._id)}

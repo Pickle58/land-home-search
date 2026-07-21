@@ -15,10 +15,10 @@ export default function EditPropertyPage() {
   const update = useMutation(api.properties.update);
 
   if (data === undefined) {
-    return <p className="text-sm text-stone-500">Loading…</p>;
+    return <p className="text-sm text-muted-foreground">Loading…</p>;
   }
   if (data === null) {
-    return <p className="text-sm text-stone-600">Property not found.</p>;
+    return <p className="text-sm text-muted-foreground">Property not found.</p>;
   }
 
   return (

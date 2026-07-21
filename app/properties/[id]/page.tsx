@@ -21,16 +21,16 @@ function Section({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className="rounded-lg border border-stone-200 bg-white shadow-sm">
+    <section className="rounded-xl border border-border bg-card shadow-sm">
       <button
         type="button"
         className="flex w-full items-center justify-between px-4 py-3 text-left"
         onClick={() => setOpen((v) => !v)}
       >
         <h2 className="text-base font-semibold">{title}</h2>
-        <span className="text-stone-400">{open ? "−" : "+"}</span>
+        <span className="text-muted-foreground/60">{open ? "−" : "+"}</span>
       </button>
-      {open ? <div className="space-y-2 border-t border-stone-100 px-4 py-3 text-sm">{children}</div> : null}
+      {open ? <div className="space-y-2 border-t border-border/60 px-4 py-3 text-sm">{children}</div> : null}
     </section>
   );
 }
@@ -38,8 +38,8 @@ function Section({
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[10rem_1fr] gap-2">
-      <dt className="text-stone-500">{label}</dt>
-      <dd className="text-stone-900">{value || "—"}</dd>
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className="text-foreground">{value || "—"}</dd>
     </div>
   );
 }
@@ -53,10 +53,10 @@ export default function PropertyDetailPage() {
   const [deleting, setDeleting] = useState(false);
 
   if (data === undefined) {
-    return <p className="text-sm text-stone-500">Loading…</p>;
+    return <p className="text-sm text-muted-foreground">Loading…</p>;
   }
   if (data === null) {
-    return <p className="text-sm text-stone-600">Property not found.</p>;
+    return <p className="text-sm text-muted-foreground">Property not found.</p>;
   }
 
   const p = data.property;
@@ -65,14 +65,14 @@ export default function PropertyDetailPage() {
     <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-muted-foreground">
             {STATUS_LABELS[p.status as PropertyStatus]}
             {p.isFavorite ? " · ★ Favorite" : ""}
           </p>
           <h1 className="text-2xl font-semibold">
             {p.address || `${p.city}, ${p.state}`}
           </h1>
-          <p className="text-stone-700">
+          <p className="text-foreground/90">
             {formatCurrency(p.price)} · {formatAcres(p.lotSizeAcres)}
             {p.pricePerAcre
               ? ` · ${formatCurrency(p.pricePerAcre)}/ac`
@@ -82,7 +82,7 @@ export default function PropertyDetailPage() {
         <div className="flex gap-2">
           <Link
             href={`/properties/${id}/edit`}
-            className="rounded-md border border-stone-300 px-3 py-1.5 text-sm"
+            className="rounded-md border border-input bg-background px-3 py-1.5 text-sm"
           >
             Edit
           </Link>
@@ -171,7 +171,7 @@ export default function PropertyDetailPage() {
 
       <Section title="Notes">
         <Row label="Tags" value={p.tags?.join(", ")} />
-        <p className="whitespace-pre-wrap text-stone-800">{p.notes || "—"}</p>
+        <p className="whitespace-pre-wrap text-foreground">{p.notes || "—"}</p>
       </Section>
 
       <Section title="Photos & documents">

@@ -99,7 +99,7 @@ function CompareInner() {
     return (
       <div className="space-y-3">
         <h1 className="text-2xl font-semibold">Compare</h1>
-        <p className="text-sm text-stone-600">
+        <p className="text-sm text-muted-foreground">
           Select 2–4 properties on the list page, then open Compare.
         </p>
         <Link href="/" className="text-sm underline">
@@ -110,20 +110,20 @@ function CompareInner() {
   }
 
   if (properties === undefined) {
-    return <p className="text-sm text-stone-500">Loading…</p>;
+    return <p className="text-sm text-muted-foreground">Loading…</p>;
   }
 
   return (
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">Compare</h1>
-        <p className="text-sm text-stone-600">
+        <p className="text-sm text-muted-foreground">
           Side-by-side tradeoffs across utilities, hazards, and cost.
         </p>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
         <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-stone-200 bg-stone-50">
+          <thead className="border-b border-border bg-muted">
             <tr>
               <th className="px-3 py-2">Field</th>
               {properties.map((p) => (
@@ -140,8 +140,8 @@ function CompareInner() {
           </thead>
           <tbody>
             {COMPARE_FIELDS.map((field) => (
-              <tr key={field.label} className="border-b border-stone-100 align-top">
-                <td className="px-3 py-2 font-medium text-stone-600">
+              <tr key={field.label} className="border-b border-border/60 align-top">
+                <td className="px-3 py-2 font-medium text-muted-foreground">
                   {field.label}
                 </td>
                 {properties.map((p) => (
@@ -160,7 +160,7 @@ function CompareInner() {
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<p className="text-sm text-stone-500">Loading…</p>}>
+    <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
       <CompareInner />
     </Suspense>
   );

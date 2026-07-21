@@ -22,7 +22,7 @@ export function PropertyMap() {
   const pins = useQuery(api.properties.listForMap);
 
   if (pins === undefined) {
-    return <p className="text-sm text-stone-500">Loading map…</p>;
+    return <p className="text-sm text-muted-foreground">Loading map…</p>;
   }
 
   const center: [number, number] =
@@ -33,12 +33,12 @@ export function PropertyMap() {
   return (
     <div className="space-y-3">
       <div>
-        <h1 className="text-2xl font-semibold text-stone-900">Map</h1>
-        <p className="text-sm text-stone-600">
+        <h1 className="text-2xl font-semibold text-foreground">Map</h1>
+        <p className="text-sm text-muted-foreground">
           Pins colored by status. Click a pin for details.
         </p>
       </div>
-      <div className="h-[70vh] overflow-hidden rounded-lg border border-stone-200">
+      <div className="h-[70vh] overflow-hidden rounded-xl border border-border shadow-sm">
         <MapContainer
           center={center}
           zoom={pins.length ? 8 : 4}
@@ -76,7 +76,7 @@ export function PropertyMap() {
         </MapContainer>
       </div>
       {pins.length === 0 ? (
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-muted-foreground">
           No properties with map coordinates yet.
         </p>
       ) : null}
