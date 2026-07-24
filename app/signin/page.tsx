@@ -73,7 +73,7 @@ export default function SignInPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="relative">
+            <div className="flex items-center gap-1.5">
               <Input
                 id="password"
                 name="password"
@@ -83,18 +83,22 @@ export default function SignInPage() {
                 autoComplete={
                   flow === "signIn" ? "current-password" : "new-password"
                 }
-                className="pr-9"
+                className="flex-1 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
               />
               <Button
                 type="button"
-                variant="ghost"
-                size="icon-xs"
-                className="absolute top-1/2 right-1 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                variant="outline"
+                size="icon"
+                className="shrink-0 text-foreground"
                 onClick={() => setShowPassword((visible) => !visible)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 aria-pressed={showPassword}
               >
-                {showPassword ? <EyeOff /> : <Eye />}
+                {showPassword ? (
+                  <EyeOff className="size-4" aria-hidden />
+                ) : (
+                  <Eye className="size-4" aria-hidden />
+                )}
               </Button>
             </div>
           </div>
