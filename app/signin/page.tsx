@@ -2,6 +2,7 @@
 
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
+import { Eye, EyeOff } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ export default function SignInPage() {
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -71,13 +73,30 @@ export default function SignInPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              minLength={8}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                minLength={8}
+                autoComplete={
+                  flow === "signIn" ? "current-password" : "new-password"
+                }
+                className="pr-9"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-xs"
+                className="absolute top-1/2 right-1 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </Button>
+            </div>
           </div>
           {error ? (
             <p className="text-sm text-destructive">{error}</p>
@@ -94,9 +113,11 @@ export default function SignInPage() {
           type="button"
           variant="link"
           className="mt-4 h-auto p-0 text-muted-foreground"
-          onClick={() =>
-            setFlow((f) => (f === "signIn" ? "signUp" : "signIn"))
-          }
+          onClick={() => {
+            setFlow((f) => (f === "signIn" ? "signUp" : "signIn"));
+            setShowPassword(false);
+            setError(null);
+          }}
         >
           {flow === "signIn"
             ? "Need an account? Sign up"
