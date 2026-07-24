@@ -2,39 +2,8 @@
 
 import { v } from "convex/values";
 import { action } from "./_generated/server";
-
-const EXTRACTION_PROMPT = `You extract structured real-estate / vacant land listing data into JSON.
-Return ONLY valid JSON (no markdown). Use null for unknown fields.
-Schema keys (use these exact names):
-address, city, county, state, zip, latitude, longitude, subdivision, schoolDistrict,
-listingUrl, mlsNumber, price, status, source, agentName, agentContact,
-lotSizeAcres, buildableAcres, zoning, topography, elevation, viewDescription, easements,
-mineralRights, waterRights, hoaOrDeedRestrictions, hoaOrDeedDetails, setbackNotes,
-waterSource, wellDepthFt, wellGpm, wastewater, septicNotes,
-electric, distanceToNearestPoleFt, estimatedExtensionCost, gas, internet, cellSignalNotes,
-roadType, roadMaintenance, drivewayInstalled, distanceFromPavedRoadMiles,
-fireDeptAccessAdequate, fireDeptImprovementsNeeded, nearestFireStationMiles, fireDeptAccessRoadWidthFt,
-femaFloodZone, fireRiskZone, wildfireHistoryNearby, wildfireHistoryNotes,
-seismicZoneNotes, landslideRisk, radonZoneNotes, wetlandsPresent,
-protectedSpeciesOrEnvRestrictions, existingStructures, structureAgeYears,
-structureConditionNotes, fencing, fencingNotes, outbuildings,
-annualPropertyTax, assessedValue, hoaFees, tags, notes
-
-Enums when applicable:
-status: researching|contacted_agent|scheduled_tour|toured|offer_made|under_contract|purchased|passed
-topography: flat|gently_sloped|steep|mixed
-mineralRights: included|excluded|unknown
-waterSource: municipal|private_well_existing|well_needed|shared_well|unknown
-wastewater: municipal_sewer|septic_installed|perc_test_passed|perc_test_needed|perc_test_failed|unknown
-electric: on_site|available_at_road|nearby_needs_extension|unknown
-gas: natural_gas|propane_tank|none
-internet: fiber|cable|dsl|satellite|none_confirmed|unknown
-roadType: paved|gravel|dirt|private_easement|unknown
-roadMaintenance: county|hoa|private_owner|unknown
-fireDeptAccessAdequate: adequate|needs_improvements|unknown
-fireRiskZone: low|moderate|high|very_high|unknown
-landslideRisk: low|moderate|high|unknown
-tags should be a string array when present.`;
+import { requireActionUser } from "./lib/auth";
+import { EXTRACTION_PROMPT } from "./lib/extractionPrompt";
 
 export const extractFromListing = action({
   args: {
@@ -43,10 +12,7 @@ export const extractFromListing = action({
   },
   returns: v.any(),
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    await requireActionUser(ctx);
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       throw new Error(

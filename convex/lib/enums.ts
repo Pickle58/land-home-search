@@ -1,5 +1,10 @@
 import { v } from "convex/values";
 
+function literalUnion<T extends string>(values: readonly [T, ...T[]]) {
+  const [first, ...rest] = values;
+  return v.union(v.literal(first), ...rest.map((value) => v.literal(value)));
+}
+
 export const PROPERTY_STATUSES = [
   "researching",
   "contacted_agent",
@@ -105,123 +110,21 @@ export const DOCUMENT_LABELS = [
   "other",
 ] as const;
 
-export const propertyStatusValidator = v.union(
-  v.literal("researching"),
-  v.literal("contacted_agent"),
-  v.literal("scheduled_tour"),
-  v.literal("toured"),
-  v.literal("offer_made"),
-  v.literal("under_contract"),
-  v.literal("purchased"),
-  v.literal("passed"),
-);
-
-export const topographyValidator = v.union(
-  v.literal("flat"),
-  v.literal("gently_sloped"),
-  v.literal("steep"),
-  v.literal("mixed"),
-);
-
-export const mineralRightsValidator = v.union(
-  v.literal("included"),
-  v.literal("excluded"),
-  v.literal("unknown"),
-);
-
-export const waterSourceValidator = v.union(
-  v.literal("municipal"),
-  v.literal("private_well_existing"),
-  v.literal("well_needed"),
-  v.literal("shared_well"),
-  v.literal("unknown"),
-);
-
-export const wastewaterValidator = v.union(
-  v.literal("municipal_sewer"),
-  v.literal("septic_installed"),
-  v.literal("perc_test_passed"),
-  v.literal("perc_test_needed"),
-  v.literal("perc_test_failed"),
-  v.literal("unknown"),
-);
-
-export const electricValidator = v.union(
-  v.literal("on_site"),
-  v.literal("available_at_road"),
-  v.literal("nearby_needs_extension"),
-  v.literal("unknown"),
-);
-
-export const gasValidator = v.union(
-  v.literal("natural_gas"),
-  v.literal("propane_tank"),
-  v.literal("none"),
-);
-
-export const internetValidator = v.union(
-  v.literal("fiber"),
-  v.literal("cable"),
-  v.literal("dsl"),
-  v.literal("satellite"),
-  v.literal("none_confirmed"),
-  v.literal("unknown"),
-);
-
-export const roadTypeValidator = v.union(
-  v.literal("paved"),
-  v.literal("gravel"),
-  v.literal("dirt"),
-  v.literal("private_easement"),
-  v.literal("unknown"),
-);
-
-export const roadMaintenanceValidator = v.union(
-  v.literal("county"),
-  v.literal("hoa"),
-  v.literal("private_owner"),
-  v.literal("unknown"),
-);
-
-export const fireDeptAccessValidator = v.union(
-  v.literal("adequate"),
-  v.literal("needs_improvements"),
-  v.literal("unknown"),
-);
-
-export const fireRiskValidator = v.union(
-  v.literal("low"),
-  v.literal("moderate"),
-  v.literal("high"),
-  v.literal("very_high"),
-  v.literal("unknown"),
-);
-
-export const landslideRiskValidator = v.union(
-  v.literal("low"),
-  v.literal("moderate"),
-  v.literal("high"),
-  v.literal("unknown"),
-);
-
-export const contactRoleValidator = v.union(
-  v.literal("builder"),
-  v.literal("general_contractor"),
-  v.literal("well_driller"),
-  v.literal("septic_installer"),
-  v.literal("electrician"),
-  v.literal("surveyor"),
-  v.literal("real_estate_agent"),
-  v.literal("inspector"),
-  v.literal("other"),
-);
-
-export const documentLabelValidator = v.union(
-  v.literal("survey"),
-  v.literal("perc_test"),
-  v.literal("disclosure"),
-  v.literal("other"),
-);
+export const propertyStatusValidator = literalUnion(PROPERTY_STATUSES);
+export const topographyValidator = literalUnion(TOPOGRAPHIES);
+export const mineralRightsValidator = literalUnion(MINERAL_RIGHTS);
+export const waterSourceValidator = literalUnion(WATER_SOURCES);
+export const wastewaterValidator = literalUnion(WASTEWATER_TYPES);
+export const electricValidator = literalUnion(ELECTRIC_AVAILABILITY);
+export const gasValidator = literalUnion(GAS_TYPES);
+export const internetValidator = literalUnion(INTERNET_TYPES);
+export const roadTypeValidator = literalUnion(ROAD_TYPES);
+export const roadMaintenanceValidator = literalUnion(ROAD_MAINTENANCE);
+export const fireDeptAccessValidator = literalUnion(FIRE_DEPT_ACCESS);
+export const fireRiskValidator = literalUnion(FIRE_RISK_ZONES);
+export const landslideRiskValidator = literalUnion(LANDSLIDE_RISKS);
+export const contactRoleValidator = literalUnion(CONTACT_ROLES);
+export const documentLabelValidator = literalUnion(DOCUMENT_LABELS);
 
 export const contactValidator = v.object({
   name: v.string(),
@@ -243,10 +146,18 @@ export const visitLogEntryValidator = v.object({
 });
 
 export type PropertyStatus = (typeof PROPERTY_STATUSES)[number];
+export type Topography = (typeof TOPOGRAPHIES)[number];
+export type MineralRights = (typeof MINERAL_RIGHTS)[number];
 export type WaterSource = (typeof WATER_SOURCES)[number];
 export type WastewaterType = (typeof WASTEWATER_TYPES)[number];
 export type ElectricAvailability = (typeof ELECTRIC_AVAILABILITY)[number];
+export type GasType = (typeof GAS_TYPES)[number];
+export type InternetType = (typeof INTERNET_TYPES)[number];
+export type RoadType = (typeof ROAD_TYPES)[number];
+export type RoadMaintenance = (typeof ROAD_MAINTENANCE)[number];
 export type FireDeptAccess = (typeof FIRE_DEPT_ACCESS)[number];
+export type FireRiskZone = (typeof FIRE_RISK_ZONES)[number];
+export type LandslideRisk = (typeof LANDSLIDE_RISKS)[number];
 export type DocumentLabel = (typeof DOCUMENT_LABELS)[number];
 export type ContactRole = (typeof CONTACT_ROLES)[number];
 
