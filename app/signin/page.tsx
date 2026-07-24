@@ -2,7 +2,6 @@
 
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
-import { Eye, EyeOff } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -73,7 +72,7 @@ export default function SignInPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <div className="flex items-center gap-1.5">
+            <div className="relative">
               <Input
                 id="password"
                 name="password"
@@ -83,23 +82,52 @@ export default function SignInPage() {
                 autoComplete={
                   flow === "signIn" ? "current-password" : "new-password"
                 }
-                className="flex-1 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                className="pr-20 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
               />
-              <Button
+              <button
                 type="button"
-                variant="outline"
-                size="icon"
-                className="shrink-0 text-foreground"
+                className="absolute top-1/2 right-1 z-10 flex -translate-y-1/2 items-center gap-1 rounded-md border border-border bg-card px-2 py-0.5 text-xs font-semibold text-foreground shadow-sm hover:bg-muted"
                 onClick={() => setShowPassword((visible) => !visible)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 aria-pressed={showPassword}
               >
                 {showPassword ? (
-                  <EyeOff className="size-4" aria-hidden />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-4.508" />
+                    <path d="m2 2 20 20" />
+                  </svg>
                 ) : (
-                  <Eye className="size-4" aria-hidden />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
                 )}
-              </Button>
+                <span>{showPassword ? "Hide" : "Show"}</span>
+              </button>
             </div>
           </div>
           {error ? (

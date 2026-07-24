@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
-    "build": "convex deploy --cmd 'pnpm exec next build'",
+    "build": "sh -c 'if [ -n \"$CONVEX_DEPLOY_KEY\" ]; then convex deploy --cmd \"pnpm exec next build\"; else pnpm exec next build; fi'",
     "build:next": "next build",
     "start": "next start",
     "lint": "eslint",
