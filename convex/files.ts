@@ -1,21 +1,11 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
-import type { MutationCtx } from "./_generated/server";
 import { documentLabelValidator } from "./lib/enums";
-import { requireUserId } from "./lib/auth";
-
-async function requireOwnedProperty(
-  ctx: MutationCtx,
-  propertyId: Id<"properties">,
-  userId: Id<"users">,
-) {
-  const property = await ctx.db.get(propertyId);
-  if (!property || property.userId !== userId) {
-    throw new Error("Property not found");
-  }
-  return property;
-}
+import {
+  requireOwnedProperty,
+  requireUserId,
+  touchProperty,
+} from "./lib/auth";
 
 export const generateUploadUrl = mutation({
   args: {},
@@ -79,7 +69,7 @@ export const attachDocument = mutation({
       fileName: args.fileName,
       createdAt: Date.now(),
     });
-    await ctx.db.patch(args.propertyId, { updatedAt: Date.now() });
+    await touchProperty(ctx, args.propertyId);
     return docId;
   },
 });
@@ -98,7 +88,7 @@ export const removeDocument = mutation({
     await requireOwnedProperty(ctx, doc.propertyId, userId);
     await ctx.storage.delete(doc.storageId);
     await ctx.db.delete(args.documentId);
-    await ctx.db.patch(doc.propertyId, { updatedAt: Date.now() });
+    await touchProperty(ctx, doc.propertyId);
     return null;
   },
 });

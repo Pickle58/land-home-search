@@ -11,7 +11,12 @@ import {
   computePricePerAcre,
   propertyFieldsValidator,
 } from "./lib/propertyFields";
-import { requireUserId } from "./lib/auth";
+import {
+  getOwnedProperty,
+  requireOwnedProperty,
+  requireUserId,
+} from "./lib/auth";
+import { MAX_COMPARE_PROPERTIES } from "./lib/constants";
 
 const sortFields = v.union(
   v.literal("updatedAt"),
@@ -187,8 +192,8 @@ export const get = query({
   ),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    const property = await ctx.db.get(args.id);
-    if (!property || property.userId !== userId) {
+    const property = await getOwnedProperty(ctx, args.id, userId);
+    if (!property) {
       return null;
     }
     const documents = await ctx.db
@@ -205,7 +210,7 @@ export const getMany = query({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const results: Doc<"properties">[] = [];
-    for (const id of args.ids.slice(0, 4)) {
+    for (const id of args.ids.slice(0, MAX_COMPARE_PROPERTIES)) {
       const property = await ctx.db.get(id);
       if (property && property.userId === userId) {
         results.push(property);
@@ -241,10 +246,7 @@ export const update = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    const existing = await ctx.db.get(args.id);
-    if (!existing || existing.userId !== userId) {
-      throw new Error("Property not found");
-    }
+    const existing = await requireOwnedProperty(ctx, args.id, userId);
     const { id, ...fields } = args;
     const pricePerAcre = computePricePerAcre(fields.price, fields.lotSizeAcres);
     await ctx.db.patch(id, {
@@ -262,10 +264,7 @@ export const toggleFavorite = mutation({
   returns: v.boolean(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    const property = await ctx.db.get(args.id);
-    if (!property || property.userId !== userId) {
-      throw new Error("Property not found");
-    }
+    const property = await requireOwnedProperty(ctx, args.id, userId);
     const next = !property.isFavorite;
     await ctx.db.patch(args.id, {
       isFavorite: next,
@@ -280,10 +279,7 @@ export const remove = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    const property = await ctx.db.get(args.id);
-    if (!property || property.userId !== userId) {
-      throw new Error("Property not found");
-    }
+    const property = await requireOwnedProperty(ctx, args.id, userId);
 
     for (const photoId of property.photos) {
       await ctx.storage.delete(photoId);
